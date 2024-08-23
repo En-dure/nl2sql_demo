@@ -13,7 +13,7 @@ def ask_question_list():
 
 
 if __name__ == "__main__":
-    question = "骨科情况"
+    question = "1到2月蔡明和倪海键的耗占比"
     vllm = Vllm(vllm_config)
     vllm.connect_to_mysql(**mysql_config)
     if not question:

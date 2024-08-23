@@ -211,7 +211,7 @@ class Base(ABC):
             # 角色:意图识别和语义分析专家
                 你的回答应该必须基于给定的上下文，并遵循回答指南和格式说明，否则将对你惩罚。
             ## 工作内容：
-                1. 你应该从（科室概览，重点病种，医师）中识别出用户想问的是哪一大类
+                1. 你必须从（科室概览，重点病种，医师）中准确识别出用户想问的是哪一大类
                 2. 根据用户的完整问题，进行语义分析，从中提取出时间，科室，指标，补充四个元素。
             ## 关键说明
                 1. 时间的格式为yyyy-mm-dd
@@ -243,7 +243,7 @@ class Base(ABC):
             confirm_prompt = [self.system_message(confirm_initial_prompt), self.user_message(semantic_result)]
             return confirm_prompt
 
-    def confirm_quesiton(self, question, reget_info: str = ''):
+    def confirm_quesiton(self, question, reget_info: str = '', need_confirm:str = False):
         flag = False
         while not flag:
             semantic_prompt = self.get_semantic_prompt(question, reget_info=reget_info)
@@ -260,7 +260,10 @@ class Base(ABC):
                 try:
                     confirm = self.submit_confirm_prompt(confirm_prompt)
                     print(confirm)
-                    reget_info = input("确认请输入：y, 补充或修改请直接输入内容:")
+                    if need_confirm :
+                        reget_info = input("确认请输入：y, 补充或修改请直接输入内容:")
+                    else:
+                        reget_info = "y"
                     if reget_info == "y":
                         flag = True
                         self.log(self.logger, "question:" + question)
@@ -338,7 +341,6 @@ class Base(ABC):
         '''
         thinking_prompt = [self.system_message(sql_prompt), self.user_message(question)]
         return thinking_prompt
-
     def get_reflection_prompt(self, question: str, thinking: str, SQL: str):
 
         reflection_prompt = f'''
