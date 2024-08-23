@@ -18,6 +18,7 @@ class Base(ABC):
         self.index_file = self.config.get("index_file", "")
         self.document_file = self.config.get("document_file", "")
         self.example_file = self.config.get("example_file", "")
+        self.example_json = self.config.get("example_json","")
         self.SQL_DDL_file = self.config.get("SQL_DDL_file", "")
         self.run_sql_is_set = False
         self.relation_file = self.config.get("relation_file", "")
@@ -222,10 +223,10 @@ class Base(ABC):
                     "医师": 姓名，工号，出院人数，住院均次费用，药占比（住院），耗占比（住院）
                 5. 你必须将用户原始question和reget_info重新梳理组合作为最终的question。reget_info会包含用户的补充信息，或特殊要求。
             # 流程和格式说明
-                1. 如果成功分解，返回格式为{{"Done": "True", "question":question ,"result": {{"意图":"","时间": "", "科室": "", "指标": "", "其他信息":""}}}}
-                    其中指标根据意图，必须为具体指标
+                1. 如果成功分解，返回格式为{{"Done": "True", "question":"" ,"result": {{"意图":"","时间": "", "科室": "", "指标": "", "其他信息":""}}}}
+                    其中的question，在用户问题的基础上把信息补全；指标根据意图，必须为具体指标
                 2. 如果不能够成功分解，则提示用户补充相关信息，将你的提示存入result中，等待用户输入,
-                返回格式为{{"Done": "False", "question":question ,"result": ""}}
+                返回格式为{{"Done": "False", "question":"" ,"result": ""}}
                 3. 不能成功分解后，用户会补充信息reget_info, 将此信息与原始question结合作为完整用户提问，重新分解，循环此过程，直到你有足够多的信息，可以进行语义分析。
             '''
             semantic_prompt = [self.system_message(initial_semantic_prompt), self.user_message(question + reget_info)]
@@ -389,7 +390,7 @@ class Base(ABC):
 
     def ask(self, question):
         while self.times <= self.MAX_TIMES:
-            quesion, semantic_result = self.confirm_quesiton(question)
+            question, semantic_result = self.confirm_quesiton(question)
             thinking = self.get_thinking_prompt(question, semantic_result)
             thinking_result = self.submit_thinking_prompt(thinking)
             self.log(self.logger, "thinking:" + thinking_result)
@@ -445,7 +446,7 @@ class Base(ABC):
             self.log(self.logger, "查询结果:" + result)
             print("查询结果:", result)
             self.times = 1
-            # self.auto_add_examples(question, reflection, auto=self.AUTO_ADD_EXAMPLES)
+            self.auto_add_examples(question, sql, auto=self.AUTO_ADD_EXAMPLES)
             return result
     def auto_add_examples(self, question, sql, auto = False):
         if auto:
@@ -460,22 +461,25 @@ class Base(ABC):
         else:
             print("无效的输入，请输入 'y' 或 'n'。")
 
-    def add_example(self, question, sql, example_file = None):
-        if not example_file:
-            example_file = self.example_file
+    def add_example(self, question, sql, example_json = None):
+        if not example_json:
+            example_json = os.path.join(self.prefix_dir, self.example_json)
         new_example = {
             "question": question,
             "SQL": sql
         }
+        if not os.path.exists(example_json):
+            with open(example_json, 'w', encoding='utf-8') as file:
+                file.write("{}")  # 创建一个空的JSON对象
         # 读取现有的 JSON 文件
-        with open(example_file, 'r', encoding='utf-8') as file:
+        with open(example_json, 'r', encoding='utf-8') as file:
             data = json.load(file)
         # 将新例子追加到 examples 数组
         if 'examples' not in data:
             data['examples'] = []
         data['examples'].append(new_example)
         # 将更新后的数据写回 JSON 文件
-        with open('addition/example.json', 'w', encoding='utf-8') as file:
+        with open(example_json, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
 
     @abstractmethod

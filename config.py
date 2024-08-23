@@ -20,6 +20,7 @@ base_config = {
     "document_file": "document.txt",
     "SQL_DDL_file": "create_tables.sql",
     "example_file": "example.txt",
+    "example_json": "example.json",
     "relation_file": "relation.txt",
     "MAX_TIMES" : 10,
     "MAX_SQL_ATTEMPT":3
