@@ -11,7 +11,7 @@ from decimal import Decimal
 class Base(ABC):
     def __init__(self, config=None):
         self.config = base_config
-        self.dialect = self.config.get("dialect", "SQL")
+        self.dialect = self.config.get("dialect", "MySQL")
         self.log_dir = self.config.get("log_dir", "log.log")
         self.logger = self.setup_logger(self.log_dir)
         self.prefix_dir = self.config.get("prefix_dir", "")
@@ -237,7 +237,7 @@ class Base(ABC):
         # 角色：
             你的回答必须基于给定的上下文，并遵循回答指南和格式说明，否则将对你惩罚。
         ## 工作内容：
-            你将语义分析专家分析的结果转换为自然语言，不需要额外的解释，提供给用户确认，格式为
+            你将语义分析专家分析的结果转换为自然语言，不需要解释指标含义，提供给用户确认，格式为
             {{你的分析}}
         '''
             confirm_prompt = [self.system_message(confirm_initial_prompt), self.user_message(semantic_result)]
@@ -280,7 +280,7 @@ class Base(ABC):
 
     def get_thinking_prompt(self, question, semantic: str = None):
         thinking_initial_prompt = f'''
-        # 角色:思考专家    
+        # 角色:解决方案专家    
             1. 你的回答应该仅基于给定的上下文，并遵循回答指南和格式说明
             2. 你的回答将提供思路，以指导最终的SQL语句生成
         # 信息说明: 
@@ -302,9 +302,9 @@ class Base(ABC):
                 使用哪些表；
                 [列名1，列名2,...]，必须为数据表的包含的字段；
                 根据用户的意图，挑选的example_info中的示例
-                输出格式为:{{"Done":"True", "res":""}} res的内容需转化为json格式，因此不要有非法换行符等内容。
+                输出格式必须为:{{"Done":"True", "res":""}} res的内容需转化为json格式，因此不要有非法换行符等内容。
             4. 如果无法从ddl_info和index_info中提取出最相关的信息，说明原因
-                输出格式为:{{"Done":"False", "res":""}}
+                输出格式必须为:{{"Done":"False", "res":""}}
         '''
         thinking_prompt = [self.system_message(thinking_initial_prompt), self.user_message(question + semantic)]
         return thinking_prompt
@@ -390,7 +390,7 @@ class Base(ABC):
 
 
 
-    def ask(self, question):
+    def ask(self, question, save_csv:bool = False):
         while self.times <= self.MAX_TIMES:
             question, semantic_result = self.confirm_quesiton(question)
             thinking = self.get_thinking_prompt(question, semantic_result)
@@ -415,10 +415,6 @@ class Base(ABC):
                 sql = self.submit_prompt(sql_prompt)
                 print("initial_sql:", sql)
 
-                # reflection_prompt = self.get_reflection_prompt(question, thinking_result, sql)
-                # sql = self.submit_reflection_prompt(reflection_prompt)
-                # print("reflection:", sql)
-
                 y_or_n, run_sql_result,  = self.run_sql(sql)
                 if not y_or_n:
                     error = run_sql_result
@@ -436,8 +432,12 @@ class Base(ABC):
                 continue
 
             self.log(self.logger, "sql:" + sql)
-            # self.log(self.logger, "reflection:" + reflection)
             print("result:", run_sql_result)
+            if save_csv:
+                from datetime import datetime
+                time = datetime.now().strftime("%Y%m%d%H%M")
+                run_sql_result.to_excel(f"result_{time}.xlsx", index=False)
+
             sql_result = run_sql_result.to_dict()
             converted_dict = {key: {k: float(v) if isinstance(v, Decimal) else v for k, v in value.items()} for
                               key, value in sql_result.items()}

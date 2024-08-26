@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="499044b3-3407-441b-aaf2-1ca0dcfd480f" name="更改" comment="v1.1">
+    <list default="true" id="499044b3-3407-441b-aaf2-1ca0dcfd480f" name="更改" comment="test_correct">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/addition/example.json" beforeDir="false" afterPath="$PROJECT_DIR$/addition/example.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addition/relation.txt" beforeDir="false" afterPath="$PROJECT_DIR$/addition/relation.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ask.py" beforeDir="false" afterPath="$PROJECT_DIR$/ask.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chro_ask.py" beforeDir="false" afterPath="$PROJECT_DIR$/chro_ask.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/class_chromadb.py" beforeDir="false" afterPath="$PROJECT_DIR$/class_chromadb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,12 +61,12 @@
     &quot;assignee&quot;: &quot;En-dure&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/En-dure/nl2sql_demo.git",
-    "accountId": "64457712-1440-4cf7-a5ef-0da1712ff1fd"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/En-dure/nl2sql_demo.git&quot;,
+    &quot;accountId&quot;: &quot;64457712-1440-4cf7-a5ef-0da1712ff1fd&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -76,14 +79,15 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.ask.executor": "Run",
-    "Python.chro_ask.executor": "Run",
+    "Python.chro_ask.executor": "Debug",
     "Python.chromedb.executor": "Debug",
+    "Python.class_chromadb (1).executor": "Debug",
     "Python.st.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.com.insyncwithfoo.pyrightls.configuration.converter.ProjectConfigurationsConverter": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "RAG",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/liuyinglai/OneDrive/inesa/十院/demo",
     "node.js.detected.package.eslint": "true",
@@ -128,7 +132,7 @@
       <visibility group="运行配置" flag="true" />
     </myKeys>
   </component>
-  <component name="RunManager" selected="Python.ask">
+  <component name="RunManager" selected="Python.chro_ask">
     <configuration name="Vllm" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="db_compilot" />
       <option name="ENV_FILES" value="" />
@@ -198,6 +202,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="class_chromadb (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="db_compilot" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/class_chromadb.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="class_chromadb" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="db_compilot" />
       <option name="ENV_FILES" value="" />
@@ -246,9 +273,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.chro_ask" />
+        <item itemvalue="Python.class_chromadb (1)" />
         <item itemvalue="Python.ask" />
         <item itemvalue="Python.st" />
-        <item itemvalue="Python.chro_ask" />
         <item itemvalue="Python.class_chromadb" />
       </list>
     </recent_temporary>
@@ -296,7 +324,8 @@
       <workItem from="1724035091842" duration="40660000" />
       <workItem from="1724293913468" duration="18971000" />
       <workItem from="1724374995897" duration="11564000" />
-      <workItem from="1724390342396" duration="7176000" />
+      <workItem from="1724390342396" duration="12924000" />
+      <workItem from="1724634477343" duration="10263000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <option name="closed" value="true" />
@@ -410,7 +439,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724393895083</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="test_correct">
+      <option name="closed" value="true" />
+      <created>1724397688331</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1724397688331</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -440,7 +477,8 @@
     <MESSAGE value="RAG &amp; add ex" />
     <MESSAGE value="a" />
     <MESSAGE value="v1.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="v1.1" />
+    <MESSAGE value="test_correct" />
+    <option name="LAST_COMMIT_MESSAGE" value="test_correct" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -449,6 +487,11 @@
           <url>file://$USER_HOME$/AppData/Roaming/Python/Python310/site-packages/chromadb/api/models/Collection.py</url>
           <line>116</line>
           <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/chro_ask.py</url>
+          <line>9</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -462,10 +505,12 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/db_compilot$chromedb.coverage" NAME="chromedb 覆盖结果" MODIFIED="1723798768449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/demo$chro_ask.coverage" NAME="chro_ask 覆盖结果" MODIFIED="1724659843432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/db_compilot$chro_ask.coverage" NAME="chro_ask 覆盖结果" MODIFIED="1724117818638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/db_compilot$ask.coverage" NAME="ask 覆盖结果" MODIFIED="1724036826512" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/demo$ask.coverage" NAME="ask 覆盖结果" MODIFIED="1724397353416" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/demo$ask.coverage" NAME="ask 覆盖结果" MODIFIED="1724651411989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/demo$st.coverage" NAME="st 覆盖结果" MODIFIED="1724307341396" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/db_compilot$st.coverage" NAME="st 覆盖结果" MODIFIED="1724118141326" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/demo$class_chromadb__1_.coverage" NAME="class_chromadb (1) 覆盖结果" MODIFIED="1724659723101" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
