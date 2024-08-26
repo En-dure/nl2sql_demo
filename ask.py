@@ -13,9 +13,9 @@ def ask_question_list():
 
 
 if __name__ == "__main__":
-    question = "1到2月蔡明和倪海键的耗占比"
+    question = "1到2月倪海键的情况"
     vllm = Vllm(vllm_config)
     vllm.connect_to_mysql(**mysql_config)
     if not question:
         question = input("请输入你的问题: ")
-    vllm.ask(question)
+    vllm.ask(question,save_csv =True)

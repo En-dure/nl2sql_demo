@@ -18,10 +18,10 @@ class Chromadb():
         self.prefix_dir = self.config.get("prefix_dir", "")
         self.index_file = self.config.get("index_file", "")
         self.document_file = self.config.get("document_file", "")
-        self.example_file = self.config.get("example_file", "")
+        self.example_json = self.config.get("example_json", "")
         self.SQL_DDL_file = self.config.get("SQL_DDL_file", "")
         self.document_result = self.config.get("document_result", 5)
-        self.example_result = self.config.get("example_result", 1)
+        self.example_result = self.config.get("example_result", 3)
         self.index_result = self.config.get("index_result", 5)
         self.ddl_result = self.config.get("ddl_result", 5)
         if self.curr_client == 'persistent':
@@ -97,10 +97,10 @@ class Chromadb():
         )
         return id
 
-    def get_examples(self, example_file_path=None):
-        if not example_file_path:
-            example_file_path = self.prefix_dir + self.example_file
-        with open(example_file_path, 'r', encoding='utf-8') as f:
+    def get_examples(self, example_json_path=None):
+        if not example_json_path:
+            example_json_path = self.prefix_dir + self.example_json
+        with open(example_json_path, 'r', encoding='utf-8') as f:
             examples = json.load(f)
             examples = examples["examples"]
         return examples
@@ -283,15 +283,15 @@ if __name__ == '__main__':
     # for index in indexs:
     #     c.add_index_data(index)
     #
-    # examples = c.get_examples()
-    # print(examples)
-    # for example in examples:
-    #     c.add_example_data(example)
+    examples = c.get_examples()
+    print(examples)
+    c.remove_collection('example')
+    for example in examples:
+        c.add_example_data(example)
     #
     # docs = c.get_document()
     # for doc in  docs:
     #     c.add_document_data(doc)
-    # question = "2024年上半年骨科门急诊收入同比增幅"
     # similar_example = c.get_similar_examples(question)
     # similar_index = c.get_similar_index(question)
     # similar_document = c.get_similar_document(question)
@@ -299,5 +299,5 @@ if __name__ == '__main__':
     # c.remove_collection('example')
     # c.remove_collection('index')
 
-    df = c.get_data()
+    # df = c.get_data()
     # print(df)
