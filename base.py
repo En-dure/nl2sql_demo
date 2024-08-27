@@ -334,10 +334,10 @@ class Base(ABC):
                 {error}
             # 回答:
                 1.必须包含 question中的时间, 科室，指标三个元素
-                2.根据以上信息，直接生成回答question的SQL语句, 不要有任何额外信息，必须确保输出的 SQL 符合 {self.dialect} 的规范且可执行，并且没有语法错误。
-                不要有任何非法符号。
+                2.根据以上信息，直接生成回答question的SQL语句, 不要有任何额外信息，必须确保输出的 SQL 符合 {self.dialect} 的规范且可执行，并且没有语法错误。    
                 3. 尽量使用简单的SQL语句，需要考虑是否正确使用SUM函数
                 4. 如果有错误信息，根据错误信息，重新生成SQL语句
+                5. 不要有\n \b等任何非法符号。
         '''
         thinking_prompt = [self.system_message(sql_prompt), self.user_message(question)]
         return thinking_prompt
