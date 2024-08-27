@@ -222,6 +222,7 @@ class Base(ABC):
                     "病种"：病种，主刀医师，例数，均次费，均次药费，药占比，均次卫生材料费，耗占比，去药去耗材占比，平均住院日
                     "医师": 姓名，工号，出院人数，住院均次费用，药占比（住院），耗占比（住院）
                 5. 你必须将用户原始question和reget_info重新梳理组合作为最终的question。reget_info会包含用户的补充信息，或特殊要求。
+                6. 如果要查询重点病种，你应该提醒用户将会列举出所有重点病种。
             # 流程和格式说明
                 1. 如果成功分解，返回格式为{{"Done": "True", "question":"" ,"result": {{"意图":"","时间": "", "科室": "", "指标": "", "其他信息":""}}}}
                     其中的question，在用户问题的基础上把信息补全；指标根据意图，必须为具体指标
@@ -238,7 +239,7 @@ class Base(ABC):
             你的回答必须基于给定的上下文，并遵循回答指南和格式说明，否则将对你惩罚。
         ## 工作内容：
             你将语义分析专家分析的结果转换为自然语言，不需要解释指标含义，提供给用户确认，格式为
-            {{你的分析}}
+            {{分析}}
         '''
             confirm_prompt = [self.system_message(confirm_initial_prompt), self.user_message(semantic_result)]
             return confirm_prompt
@@ -301,10 +302,11 @@ class Base(ABC):
             3. 思路需且仅需包含以下内容:
                 使用哪些表；
                 [列名1，列名2,...]，必须为数据表的包含的字段；
-                根据用户的意图，挑选的example_info中的示例
                 输出格式必须为:{{"Done":"True", "res":""}} res的内容需转化为json格式，因此不要有非法换行符等内容。
             4. 如果无法从ddl_info和index_info中提取出最相关的信息，说明原因
                 输出格式必须为:{{"Done":"False", "res":""}}
+            5. 输出的格式必须可以转化为json格式，不要有非法换行符等内容。
+            6. 如果要查询的是重点病种，则应找到重点病种包括的病种，然后最终合并。
         '''
         thinking_prompt = [self.system_message(thinking_initial_prompt), self.user_message(question + semantic)]
         return thinking_prompt
@@ -338,6 +340,8 @@ class Base(ABC):
                 3. 尽量使用简单的SQL语句，需要考虑是否正确使用SUM函数
                 4. 如果有错误信息，根据错误信息，重新生成SQL语句
                 5. 不要有\n \b等任何非法符号。
+                6. 如果要查询的是重点病种，应该查询所有重点病种包括的病种，然后按照病种和主刀医生排序。
+                
         '''
         thinking_prompt = [self.system_message(sql_prompt), self.user_message(question)]
         return thinking_prompt
@@ -443,13 +447,14 @@ class Base(ABC):
                               key, value in sql_result.items()}
             sql_result = json.dumps(converted_dict, ensure_ascii=False)
             self.log(self.logger, "sql_result:" + sql_result)
-            final_prompt = self.get_final_prompt(question, sql_result)
-            result = self.submit_final_prompt(final_prompt)
-            self.log(self.logger, "查询结果:" + result)
-            print("查询结果:", result)
+            # final_prompt = self.get_final_prompt(question, sql_result)
+            # result = self.submit_final_prompt(final_prompt)
+            # self.log(self.logger, "查询结果:" + result)
+            # print("查询结果:", result)
             self.times = 1
             self.auto_add_examples(question, sql, auto=self.AUTO_ADD_EXAMPLES)
-            return result
+            # return result
+            return sql_result
     def auto_add_examples(self, question, sql, auto = False):
         if auto:
             self.add_example(question, sql)
