@@ -20,7 +20,7 @@ base_config = {
     "document_file": "document.txt",
     "SQL_DDL_file": "create_tables.sql",
     "example_file": "example.txt",
-    "example_json": "example.json",
+
     "relation_file": "relation.txt",
     "example_type": ".txt",
     "MAX_TIMES" : 10,
@@ -35,6 +35,6 @@ chromadb_config = {
     "example_json": "example.json",
     "document_result" : 5,
     "index_result": 4,
-    "example_result": 2,
+    "example_result": 4,
     "ddl_result": 1,
 }

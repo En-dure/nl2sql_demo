@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="499044b3-3407-441b-aaf2-1ca0dcfd480f" name="更改" comment="RAG_examples">
+    <list default="true" id="499044b3-3407-441b-aaf2-1ca0dcfd480f" name="更改" comment="rag v1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/addition/example.json" beforeDir="false" afterPath="$PROJECT_DIR$/addition/example.json" afterDir="false" />
@@ -12,7 +12,6 @@
       <change beforePath="$PROJECT_DIR$/chro_ask.py" beforeDir="false" afterPath="$PROJECT_DIR$/chro_ask.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/class_chromadb.py" beforeDir="false" afterPath="$PROJECT_DIR$/class_chromadb.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,37 +74,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.ask.executor": "Run",
-    "Python.chro_ask.executor": "Run",
-    "Python.chromedb.executor": "Debug",
-    "Python.class_chromadb (1).executor": "Debug",
-    "Python.st.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.com.insyncwithfoo.pyrightls.configuration.converter.ProjectConfigurationsConverter": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
-    "git-widget-placeholder": "RAG",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/liuyinglai/OneDrive/inesa/十院/demo",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.ask.executor&quot;: &quot;Run&quot;,
+    &quot;Python.chro_ask.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.chromedb.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.class_chromadb (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Python.st.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.com.insyncwithfoo.pyrightls.configuration.converter.ProjectConfigurationsConverter&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;RAG&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/liuyinglai/OneDrive/inesa/十院/demo&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ],
-    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect": [
-      "MySQL"
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect&quot;: [
+      &quot;MySQL&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\liuyinglai\OneDrive\inesa\db_compilot" />
@@ -324,7 +323,7 @@
       <workItem from="1724293913468" duration="18971000" />
       <workItem from="1724374995897" duration="11564000" />
       <workItem from="1724390342396" duration="12924000" />
-      <workItem from="1724634477343" duration="16763000" />
+      <workItem from="1724634477343" duration="10263000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <option name="closed" value="true" />
@@ -448,13 +447,21 @@
     </task>
     <task id="LOCAL-00016" summary="RAG_examples">
       <option name="closed" value="true" />
-      <created>1724660871359</created>
+      <created>1724722849711</created>
       <option name="number" value="00016" />
       <option name="presentableId" value="LOCAL-00016" />
       <option name="project" value="LOCAL" />
-      <updated>1724660871359</updated>
+      <updated>1724722849711</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="rag v1">
+      <option name="closed" value="true" />
+      <created>1724722932154</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1724722932154</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -486,7 +493,8 @@
     <MESSAGE value="v1.1" />
     <MESSAGE value="test_correct" />
     <MESSAGE value="RAG_examples" />
-    <option name="LAST_COMMIT_MESSAGE" value="RAG_examples" />
+    <MESSAGE value="rag v1" />
+    <option name="LAST_COMMIT_MESSAGE" value="rag v1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -495,11 +503,6 @@
           <url>file://$USER_HOME$/AppData/Roaming/Python/Python310/site-packages/chromadb/api/models/Collection.py</url>
           <line>116</line>
           <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chro_ask.py</url>
-          <line>9</line>
-          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

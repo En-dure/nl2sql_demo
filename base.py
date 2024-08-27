@@ -235,12 +235,10 @@ class Base(ABC):
         if confirm_initial_prompt is None:
             confirm_initial_prompt = f'''
         # 角色：
-            你的回答必须基于给定的上下文，并遵循回答指南和格式说明，
-            不要解释semantic_result中的指标含义，否则将对你惩罚。
+            你的回答必须基于给定的上下文，并遵循回答指南和格式说明，否则将对你惩罚。
         ## 工作内容：
-            你将语义分析专家分析的结果转换为自然语言，提供给用户确认，格式为
-            {{分析}}
-            
+            你将语义分析专家分析的结果转换为自然语言，不需要解释指标含义，提供给用户确认，格式为
+            {{你的分析}}
         '''
             confirm_prompt = [self.system_message(confirm_initial_prompt), self.user_message(semantic_result)]
             return confirm_prompt
@@ -285,7 +283,6 @@ class Base(ABC):
         # 角色:解决方案专家    
             1. 你的回答应该仅基于给定的上下文，并遵循回答指南和格式说明
             2. 你的回答将提供思路，以指导最终的SQL语句生成
-            
         # 信息说明: 
             ## 1. ddl_info: 该部分包含数据库的表结构信息
                 {self.ddl_info}
@@ -304,11 +301,10 @@ class Base(ABC):
             3. 思路需且仅需包含以下内容:
                 使用哪些表；
                 [列名1，列名2,...]，必须为数据表的包含的字段；
+                根据用户的意图，挑选的example_info中的示例
                 输出格式必须为:{{"Done":"True", "res":""}} res的内容需转化为json格式，因此不要有非法换行符等内容。
             4. 如果无法从ddl_info和index_info中提取出最相关的信息，说明原因
                 输出格式必须为:{{"Done":"False", "res":""}}
-        #### 注意 
-            返回内容需转化为json格式，因此不要有非法换行符等内容。
         '''
         thinking_prompt = [self.system_message(thinking_initial_prompt), self.user_message(question + semantic)]
         return thinking_prompt
@@ -342,7 +338,6 @@ class Base(ABC):
                 不要有任何非法符号。
                 3. 尽量使用简单的SQL语句，需要考虑是否正确使用SUM函数
                 4. 如果有错误信息，根据错误信息，重新生成SQL语句
-                5. 语句中不要有\n \t 等非法符号
         '''
         thinking_prompt = [self.system_message(sql_prompt), self.user_message(question)]
         return thinking_prompt
@@ -405,7 +400,6 @@ class Base(ABC):
                 thinking_result = json.loads(thinking_result)
             except Exception as e:
                 print(e)
-                print(thinking_result)
                 self.times += 1
                 continue
             if thinking_result["Done"] == "False":

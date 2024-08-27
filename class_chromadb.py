@@ -285,7 +285,6 @@ if __name__ == '__main__':
     #
     examples = c.get_examples()
     print(examples)
-    c.remove_collection('example')
     for example in examples:
         c.add_example_data(example)
     #
