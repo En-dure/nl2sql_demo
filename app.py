@@ -42,67 +42,6 @@ def init_state():
         st.session_state.sql_end = False
     if "sql" not in st.session_state:
         st.session_state.sql = None
-def process_input(question):
-    """Process the user input and update the session state accordingly."""
-    st.session_state.messages.append({"role": "user", "content": question})
-    with st.chat_message("user"):
-        st.markdown(question)
-    if not st.session_state.question and not st.session_state.reget_info:
-        st.session_state.question = question
-    elif st.session_state.question and (not st.session_state.reget_info):
-        st.session_state.reget_info = question
-    semantic_prompt = vllm.get_semantic_prompt(st.session_state.question, reget_info=st.session_state.reget_info)
-    st.session_state.semantic_prompt = semantic_prompt
-    text = vllm.submit_semantic_prompt(semantic_prompt)
-    try:
-        text_json = json.loads(text)
-        if text_json["Done"] == "True":
-            st.session_state.question = text_json["question"]
-            with st.chat_message("assistant"):
-                st.session_state.messages.append({"role": "assistant", "content": text_json["result"]})
-            st.session_state.semantic_result = text_json["result"]
-            st.session_state.fault = False  # Reset fault flag if successful
-        else:
-            st.session_state.semantic_false_result = text_json["result"]
-            with st.chat_message("assistant"):
-                st.session_state.messages.append({"role": "assistant", "content": text_json["result"]})
-            st.session_state.fault = True  # Set fault flag to True if needs re-input
-    except Exception as e:
-        with st.chat_message("assistant"):
-            st.markdown("发生错误，请重新输入您的问题。")
-            st.markdown(str(e))
-        st.session_state.fault = True  # Set fault flag to True if an exception occurs
-
-def thinking(question, semantic_result):
-    thinking_prompt = vllm.get_thinking_prompt(question, semantic_result)
-    thinking_result = vllm.submit_thinking_prompt(thinking_prompt)
-    try:
-        thinking_result = json.loads(thinking_result)
-        if thinking_result["Done"] == "False":
-            st.markdown(thinking_result["res"])
-            return
-        else:
-            thinking_result = thinking_result["res"]
-            st.markdown(thinking_result)
-            st.session_state.thinking_end = True
-            st.session_state.thinking_result = thinking_result
-    except Exception as e:
-        return
-
-def sql(question, think_result, error):
-    sql_prompt = vllm.get_sql_prompt(question, think_result, error)
-    sql =vllm.submit_prompt(sql_prompt)
-    st.session_state.sql = sql
-    y_or_n, run_sql_result = vllm.run_sql(sql)
-    if not y_or_n:
-        st.session_state.sql_error = run_sql_result
-        return
-    if not isinstance(run_sql_result, pd.DataFrame):
-        if not run_sql_result:
-            return
-    st.session_state.sql_df = run_sql_result
-    st.session_state.sql_end = True
-    return
 
 def clear_st_state():
     st.session_state.question = ""
@@ -122,8 +61,76 @@ def clear_st_state():
     st.session_state.sql_df = pd.DataFrame()
     st.session_state.sql_end = False
     st.session_state.sql = None
+def process_input(question):
+    """Process the user input and update the session state accordingly."""
+    st.session_state.messages.append({"role": "user", "content": question})
+    with st.chat_message("user"):
+        st.markdown(question)
+    if not st.session_state.question and not st.session_state.reget_info:
+        st.session_state.question = question
+    elif st.session_state.question and (not st.session_state.reget_info):
+        st.session_state.reget_info = question
+    semantic_prompt = vllm.get_semantic_prompt(st.session_state.question, reget_info=st.session_state.reget_info)
+    st.session_state.semantic_prompt = semantic_prompt
+    with st.chat_message("assistant"):
+        stream = vllm.stream_prompt(semantic_prompt)
+        text = st.write_stream(stream)
+    try:
+        text_json = json.loads(text)
+        if text_json["Done"] == "True":
+            st.session_state.question = text_json["question"]
+            # with st.chat_message("assistant"):
+            #     st.session_state.messages.append({"role": "assistant", "content": text_json["result"]})
+            st.session_state.semantic_result = text_json["result"]
+            st.session_state.fault = False  # Reset fault flag if successful
+        else:
+            st.session_state.semantic_false_result = text_json["result"]
+            # with st.chat_message("assistant"):
+            #     st.session_state.messages.append({"role": "assistant", "content": text_json["result"]})
+            st.session_state.fault = True  # Set fault flag to True if needs re-input
+    except Exception as e:
+        with st.chat_message("assistant"):
+            st.markdown("发生错误，请重新输入您的问题。")
+            st.markdown(str(e))
+        st.session_state.fault = True  # Set fault flag to True if an exception occurs
+
+def thinking(question, semantic_result):
+    thinking_prompt = vllm.get_thinking_prompt(question, semantic_result)
+    with st.chat_message("assistant"):
+        stream = vllm.stream_prompt(thinking_prompt)
+        thinking_result = st.write_stream(stream)
+    try:
+        thinking_result = json.loads(thinking_result)
+        if thinking_result["Done"] == "False":
+            return
+        else:
+            thinking_result = thinking_result["res"]
+            st.session_state.thinking_end = True
+            st.session_state.thinking_result = thinking_result
+    except Exception as e:
+        st.write("thinking error")
+
+def sql(question, think_result, error):
+    sql_prompt = vllm.get_sql_prompt(question, think_result, error)
+    with st.chat_message("assistant"):
+        stream =vllm.stream_prompt(sql_prompt)
+        sql = st.write_stream(stream)
+    st.session_state.sql = sql
+    y_or_n, run_sql_result = vllm.run_sql(sql)
+    if not y_or_n:
+        st.session_state.sql_error = run_sql_result
+        return
+    if not isinstance(run_sql_result, pd.DataFrame):
+        if not run_sql_result:
+            return
+    st.session_state.sql_df = run_sql_result
+    st.session_state.sql_end = True
+    return
+
+
 
 def main():
+    st.title("NL2SQL DEMO")
     init_state()
     if question := st.chat_input("请输入"):
         # 显示历史消息
@@ -141,24 +148,23 @@ def main():
             st.session_state.times = 0
         # 如果没有语义分解错误
         if st.session_state.fault == False:
-            confirm_prompt = vllm.get_confirm_prompt(st.session_state.semantic_result)
-            confirm_result = vllm.submit_confirm_prompt(confirm_prompt)
-
+            # confirm_prompt = vllm.get_confirm_prompt(st.session_state.semantic_result)
+            # stream = vllm.stream_prompt(confirm_prompt)
+            # confirm_result = st.write_stream(stream)
             # 执行思考过程直到完成
-            while not st.session_state.thinking_end:
-                thinking(st.session_state.question, st.session_state.semantic_result)
-            with st.chat_message("assistant"):
-                st.markdown(st.session_state.thinking_result)
-            # 尝试执行 SQL 查询，最多重试 3 次
+            # while not st.session_state.thinking_end:
+            #     thinking(st.session_state.question, st.session_state.semantic_result)
+
             while st.session_state.sql_attemp <= 3:
-                sql(st.session_state.question, st.session_state.thinking_result, st.session_state.sql_error)
-                if st.session_state.sql_end:
-                    break
-                else:
+                if not st.session_state.sql_end:
+                    sql(st.session_state.question, st.session_state.thinking_result, st.session_state.sql_error)
                     st.session_state.sql_attemp += 1
-            with st.chat_message("assistant"):
-                st.markdown(st.session_state.sql)
+                else:
+                    break
+            # with st.chat_message("assistant"):
+            #     st.markdown(st.session_state.sql)
             # 显示 SQL 查询结果
             st.dataframe(st.session_state.sql_df)
             clear_st_state()
+
 main()

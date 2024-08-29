@@ -285,6 +285,7 @@ class Base(ABC):
         # 角色:解决方案专家    
             1. 你的回答应该仅基于给定的上下文，并遵循回答指南和格式说明
             2. 你的回答将提供思路，以指导最终的SQL语句生成
+            3. 输出的格式必须严格遵循json格式，不要有非法换行符等内容,不然对你进行最严厉的惩罚。
         # 信息说明: 
             ## 1. ddl_info: 该部分包含数据库的表结构信息
                 {self.ddl_info}
@@ -306,8 +307,10 @@ class Base(ABC):
                 输出格式必须为:{{"Done":"True", "res":""}} res的内容需转化为json格式，因此不要有非法换行符等内容。
             4. 如果无法从ddl_info和index_info中提取出最相关的信息，说明原因
                 输出格式必须为:{{"Done":"False", "res":""}}
-            5. 输出的格式必须可以转化为json格式，不要有非法换行符等内容。
-            6. 如果要查询的是重点病种，则应找到重点病种包括的病种，然后最终合并。
+            5. 如果要查询的是重点病种，则应找到重点病种包括的病种，然后最终合并。
+            6. 输出的格式必须可以转化为json格式，不要有非法换行符等内容。
+        # 输出格式
+            输出格式必须为:{{"Done":, "res":""}}
         '''
         thinking_prompt = [self.system_message(thinking_initial_prompt), self.user_message(question + semantic)]
         return thinking_prompt

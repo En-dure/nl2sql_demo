@@ -24,9 +24,6 @@ class Vllm(Base):
             api_key=config["auth-key"],
             base_url=config["vllm_host"] + "/v1"
         )
-
-
-
     def system_message(self, message: str) -> any:
         return {"role": "system", "content": message}
 
@@ -143,6 +140,15 @@ class Vllm(Base):
             response = requests.post(url, json=data)
         response_dict = response.json()
         return response_dict['choices'][0]['message']['content']
+
+
+    def stream_prompt(self, prompt):
+        stream = self.client.chat.completions.create(
+            model=self.model,
+            messages= prompt,
+            stream=True,
+        )
+        return stream
 
 if __name__ == "__main__":
     from config import vllm_config, mysql_config
