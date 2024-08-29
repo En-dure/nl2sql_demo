@@ -1,6 +1,6 @@
 import requests
 from base import Base
-
+from openai import OpenAI
 
 class Vllm(Base):
     def __init__(self, config=None):
@@ -19,6 +19,13 @@ class Vllm(Base):
             self.auth_key = config["auth-key"]
         else:
             self.auth_key = None
+
+        self.client = OpenAI(
+            api_key=config["auth-key"],
+            base_url=config["vllm_host"] + "/v1"
+        )
+
+
 
     def system_message(self, message: str) -> any:
         return {"role": "system", "content": message}
@@ -136,3 +143,11 @@ class Vllm(Base):
             response = requests.post(url, json=data)
         response_dict = response.json()
         return response_dict['choices'][0]['message']['content']
+
+if __name__ == "__main__":
+    from config import vllm_config, mysql_config
+    p = [{'role': 'system', 'content': '\n # 角色：\n 你的回答必须基于给定的上下文，并遵循回答指南和格式说明，否则将对你惩罚。\n ## 工作内容：\n 你将语义分析专家分析的结果转换为自然语言，不需要解释指标含义，提供给用户确认，格式为\n {分析}\n '}, {'role': 'user', 'content': {'意图': '科室概览', '时间': '2023-01-01至2023-11-30', '科室': '骨科', '指标': '出院人数，手术例数，出院患者手术台次数，出院患者手术占比，出院患者四级手术台次数，出院患者四级手术比例，出院患者微创手术台次数，出院患者微创手术占比', '其他信息': ''}}]
+    print(type(p))
+    a = Vllm(vllm_config)
+    b = a.submit_confirm_prompt(str(p))
+    print(b)
