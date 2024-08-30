@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="499044b3-3407-441b-aaf2-1ca0dcfd480f" name="更改" comment="st v4">
+    <list default="true" id="499044b3-3407-441b-aaf2-1ca0dcfd480f" name="更改" comment="st v6">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/addition/example.json" beforeDir="false" afterPath="$PROJECT_DIR$/addition/example.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addition/example.txt" beforeDir="false" afterPath="$PROJECT_DIR$/addition/example.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
@@ -328,7 +327,7 @@
       <workItem from="1724723042479" duration="1882000" />
       <workItem from="1724726093875" duration="1380000" />
       <workItem from="1724736094932" duration="978000" />
-      <workItem from="1724833551195" duration="50023000" />
+      <workItem from="1724833551195" duration="53204000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <option name="closed" value="true" />
@@ -514,7 +513,23 @@
       <option name="project" value="LOCAL" />
       <updated>1724997342225</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="st v5">
+      <option name="closed" value="true" />
+      <created>1725004038878</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1725004038878</updated>
+    </task>
+    <task id="LOCAL-00025" summary="st v6">
+      <option name="closed" value="true" />
+      <created>1725004455957</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1725004455957</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -553,7 +568,9 @@
     <MESSAGE value="st v2" />
     <MESSAGE value="st v3" />
     <MESSAGE value="st v4" />
-    <option name="LAST_COMMIT_MESSAGE" value="st v4" />
+    <MESSAGE value="st v5" />
+    <MESSAGE value="st v6" />
+    <option name="LAST_COMMIT_MESSAGE" value="st v6" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

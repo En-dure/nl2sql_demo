@@ -233,7 +233,7 @@ class Base(ABC):
                 3. 如果问题中的信息有重复，必须以最后出现的信息内容为主。
             # 注意：
                  输出格式必须为str格式，必须可以转化为json格式，不要有非法换行符等内容，否则将对你严重惩罚。
-                 result的结果必须返回为字符串的形式，否则将对你严重惩罚。
+                "{{"意图":"","时间": "", "科室": "", "指标": "", "其他信息":""}}"必须返回为字符串的形式，否则将对你严重惩罚。
             '''
             semantic_prompt = [self.system_message(initial_semantic_prompt), self.user_message(question + reget_info)]
             return semantic_prompt

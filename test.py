@@ -44,6 +44,8 @@ def init_state():
         st.session_state.sql = ''
     if "add_example" not in st.session_state:
         st.session_state.add_example = False
+    if "semantic_result_pass" not in st.session_state:
+        st.session_state.semantic_result_pass = False
 
 def clear_st_state():
     # st.session_state.question = None
@@ -61,6 +63,7 @@ def clear_st_state():
     st.session_state.sql_attemp = 0
     st.session_state.sql_df = pd.DataFrame()
     st.session_state.sql_end = False
+    st.session_state.semantic_result_pass = False
     # st.session_state.sql = None
 def process_input(question):
     st.session_state.times += 1
@@ -88,6 +91,8 @@ def process_input(question):
             #     st.session_state.messages.append({"role": "assistant", "content": text_json["result"]})
             st.session_state.semantic_result = text_json["result"]
             # 检验st.session_state.semantic_result 必须为字符串格式 否则失败
+            if isinstance(st.session_state.semantic_result, str):
+                st.session_state.semantic_result_pass = True
             st.session_state.fault = False  # Reset fault flag if successful
         else:
             st.session_state.semantic_false_result = text_json["result"]
@@ -96,8 +101,8 @@ def process_input(question):
             st.session_state.fault = True  # Set fault flag to True if needs re-input
     except Exception as e:
         with st.chat_message("assistant"):
-            st.markdown("发生错误，请重新输入您的问题。")
-            st.markdown(str(e))
+            st.markdown("发生错误，重新运行。")
+            # st.markdown(str(e))
         st.session_state.fault = True  # Set fault flag to True if an exception occurs
 
 def thinking(question, semantic_result):
@@ -143,6 +148,11 @@ def main():
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
         process_input(question)
+        while not st.session_state.semantic_result_pass:
+            st.markdown("语义分析失败，重新运行")
+            st.session_state.question = ''
+            st.session_state.reget_info = ''
+            process_input(question)
         # 如果没有语义分解错误
         if st.session_state.fault == False:
             # 执行思考过程直到完成

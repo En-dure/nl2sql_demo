@@ -18,7 +18,7 @@ stramlit v6
     应该点击重置或刷新页面
     否则再次提问会将 上次的question合并，造成提问不准确
 3. 已基本实现所有测试案例的测试工作
+4. semantic_result类型检查，不为str，则自动重新提交question查询
 
 
 ##  TODO
-1. 对semantic_result 进行处理，其偶尔不会然后str格式，造成submit_thinking报错
