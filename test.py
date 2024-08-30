@@ -42,6 +42,8 @@ def init_state():
         st.session_state.sql_end = False
     if "sql" not in st.session_state:
         st.session_state.sql = None
+    if "add_example" not in st.session_state:
+        st.session_state.add_example = False
 
 def clear_st_state():
     st.session_state.question = ""
@@ -85,8 +87,8 @@ def process_input(question):
             st.session_state.fault = False  # Reset fault flag if successful
         else:
             st.session_state.semantic_false_result = text_json["result"]
-            # with st.chat_message("assistant"):
-            #     st.session_state.messages.append({"role": "assistant", "content": text_json["result"]})
+            with st.chat_message("assistant"):
+                st.markdown(text_json["result"])
             st.session_state.fault = True  # Set fault flag to True if needs re-input
     except Exception as e:
         with st.chat_message("assistant"):
@@ -128,29 +130,29 @@ def sql(question, think_result, error):
     return
 
 
-
 def main():
     st.title("NL2SQL DEMO")
     init_state()
+
     if question := st.chat_input("请输入"):
         # 显示历史消息
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
+
         # 处理输入的问题
         process_input(question)
         st.session_state.times += 1
+
         # 如果输入次数达到2次，清空状态
         if st.session_state.times == 2:
             st.session_state.messages = []
             st.session_state.question = ''
             st.session_state.reget_info = ''
             st.session_state.times = 0
+
         # 如果没有语义分解错误
         if st.session_state.fault == False:
-            # confirm_prompt = vllm.get_confirm_prompt(st.session_state.semantic_result)
-            # stream = vllm.stream_prompt(confirm_prompt)
-            # confirm_result = st.write_stream(stream)
             # 执行思考过程直到完成
             while not st.session_state.thinking_end:
                 thinking(st.session_state.question, st.session_state.semantic_result)
@@ -161,10 +163,16 @@ def main():
                     st.session_state.sql_attemp += 1
                 else:
                     break
-            # with st.chat_message("assistant"):
-            #     st.markdown(st.session_state.sql)
             # 显示 SQL 查询结果
             st.dataframe(st.session_state.sql_df)
-            clear_st_state()
+            # 检查按钮是否点击
+            if st.button("保存"):
+                # 直接保存当前的输入和生成的 SQL 语句
+                vllm.auto_add_examples(st.session_state.question, st.session_state.sql)
+                # 提示用户保存成功
+                st.success("保存成功！")
+
+        clear_st_state()
+
 
 main()
