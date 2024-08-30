@@ -10,7 +10,7 @@
 2. 完成RAG的所有测试案例
 
 ## 20240830
-stramlit v5
+stramlit v6
 功能
 1. 添加add_example功能
 2. 第一次提问为question， 第二次提问为reget_info，

@@ -87,6 +87,7 @@ def process_input(question):
             # with st.chat_message("assistant"):
             #     st.session_state.messages.append({"role": "assistant", "content": text_json["result"]})
             st.session_state.semantic_result = text_json["result"]
+            # 检验st.session_state.semantic_result 必须为字符串格式 否则失败
             st.session_state.fault = False  # Reset fault flag if successful
         else:
             st.session_state.semantic_false_result = text_json["result"]
@@ -147,7 +148,6 @@ def main():
             # 执行思考过程直到完成
             while not st.session_state.thinking_end:
                 thinking(st.session_state.question, st.session_state.semantic_result)
-
             while st.session_state.sql_attemp <= 3:
                 if not st.session_state.sql_end:
                     sql(st.session_state.question, st.session_state.thinking_result, st.session_state.sql_error)
@@ -161,19 +161,23 @@ def main():
             st.dataframe(st.session_state.sql_df)
             clear_st_state()
 
+        if st.session_state.times == 2:
+            clear_st_state()
+            st.session_state.question = ''
+            st.session_state.reget_info = ''
             # 检查按钮是否点击
     if st.button("保存SQL语句"):
         # 直接保存当前的输入和生成的 SQL 语句
         if st.session_state.question and  st.session_state.sql:
             vllm.auto_add_examples(st.session_state.question, st.session_state.sql)
             st.markdown(f"**保存的问题**：{st.session_state.question}")
-            st.markdown(f"**保存的SQL语句**：\n\n```{st.session_state.sql}\n```")
+            st.markdown(f"**保存的SQL语句**：```{st.session_state.sql}```")
             st.success("保存成功！", icon="✅")
             st.session_state.question = ''
             st.session_state.sql = ''
             # 提示用户保存成功
         else:
-            st.warning('未保存成功', icon="⚠️")
+            st.warning('暂无查询，未保存成功', icon="⚠️")
     elif st.button("重置"):
         clear_st_state()
         st.session_state.question = ''
