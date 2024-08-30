@@ -8,6 +8,7 @@ import os
 import pandas as pd
 from decimal import Decimal
 
+
 class Base(ABC):
     def __init__(self, config=None):
         self.config = base_config
@@ -18,7 +19,7 @@ class Base(ABC):
         self.index_file = self.config.get("index_file", "")
         self.document_file = self.config.get("document_file", "")
         self.example_file = self.config.get("example_file", "")
-        self.example_json = self.config.get("example_json","")
+        self.example_json = self.config.get("example_json", "")
         self.SQL_DDL_file = self.config.get("SQL_DDL_file", "")
         self.run_sql_is_set = False
         self.relation_file = self.config.get("relation_file", "")
@@ -135,6 +136,7 @@ class Base(ABC):
 
         self.run_sql_is_set = True
         self.run_sql = run_sql_mysql
+
     def get_index_info(self):
         index_file_path = os.path.join(self.prefix_dir, self.index_file)
         if os.path.isfile(index_file_path):
@@ -205,7 +207,7 @@ class Base(ABC):
             print(f"文件 {relation_file_path} 不存在。")
         return relation_info
 
-    def get_semantic_prompt(self, question, initial_semantic_prompt: str = None, reget_info:str = ''):
+    def get_semantic_prompt(self, question, initial_semantic_prompt: str = None, reget_info: str = ''):
         if initial_semantic_prompt is None:
             initial_semantic_prompt = f'''
             # 角色:意图识别和语义分析专家
@@ -213,16 +215,15 @@ class Base(ABC):
             ## 工作内容：
                 1. 你必须从（科室概览，重点病种，医师）中准确识别出用户想问的是哪一大类
                 2. 根据用户的完整问题，进行语义分析，从中提取出时间，科室，指标，补充四个元素。
-            ## 关键说明
+            # 关键说明
                 1. 时间的格式为yyyy-mm-dd
                 2. 如果没提供时间，则默认为2023-01-01至2023-11-30
                 3. 如果没提供科室，默认为骨科
                 4. 如果没提供指标或用户表述的很模糊，默认为全部指标，根据意图不同，全部指标如下：
                     "科室概览"：出院人数，手术例数，出院患者手术台次数，出院患者手术占比，出院患者四级手术台次数，出院患者四级手术比例，出院患者微创手术台次数，出院患者微创手术占比
-                    "病种"：病种，主刀医师，例数，均次费，均次药费，药占比，均次卫生材料费，耗占比，去药去耗材占比，平均住院日
-                    "医师": 姓名，工号，出院人数，住院均次费用，药占比（住院），耗占比（住院）
+                    "重点病种"：病种，主刀医师，例数，均次费，均次药费，药占比，均次卫生材料费，耗占比，去药去耗材占比，平均住院日
+                    "医师": 姓名，工号，出院人数，住院均次费用，均次卫生材料费, 均次药费,药占比（住院），耗占比（住院）
                 5. 你必须将用户原始question和reget_info重新梳理组合作为最终的question。reget_info会包含用户的补充信息，或特殊要求。
-                
             # 流程和格式说明
                 1. 如果成功分解，返回格式为{{"Done": "True", "question":"" ,"result": {{"意图":"","时间": "", "科室": "", "指标": "", "其他信息":""}}}}
                     你必将result的结果返回为字符串的形式
@@ -233,7 +234,8 @@ class Base(ABC):
             '''
             semantic_prompt = [self.system_message(initial_semantic_prompt), self.user_message(question + reget_info)]
             return semantic_prompt
-    def get_confirm_prompt(self, semantic_result, confirm_initial_prompt: str =None):
+
+    def get_confirm_prompt(self, semantic_result, confirm_initial_prompt: str = None):
         if confirm_initial_prompt is None:
             confirm_initial_prompt = f'''
         # 角色：
@@ -245,7 +247,7 @@ class Base(ABC):
             confirm_prompt = [self.system_message(confirm_initial_prompt), self.user_message(semantic_result)]
             return confirm_prompt
 
-    def confirm_quesiton(self, question, reget_info: str = '', need_confirm:str = False):
+    def confirm_quesiton(self, question, reget_info: str = '', need_confirm: str = False):
         flag = False
         while not flag:
             semantic_prompt = self.get_semantic_prompt(question, reget_info=reget_info)
@@ -262,7 +264,7 @@ class Base(ABC):
                 try:
                     confirm = self.submit_confirm_prompt(confirm_prompt)
                     print(confirm)
-                    if need_confirm :
+                    if need_confirm:
                         reget_info = input("确认请输入：y, 补充或修改请直接输入内容:")
                     else:
                         reget_info = "y"
@@ -307,6 +309,8 @@ class Base(ABC):
                 输出格式必须为:{{"Done":"False", "res":""}}
             5. 如果要查询的是重点病种，则应找到重点病种包括的病种，然后最终合并。
             6. 输出的格式必须可以转化为json格式，不要有非法换行符等内容。
+            7. 你要输出的是思路，而不是SQL语句。
+            8. 占比类的指标必须转换为百分数，要有%，不要有非法符号。
         # 输出格式
             输出格式必须为:{{"Done":, "res":""}}
         '''
@@ -343,10 +347,12 @@ class Base(ABC):
                 4. 如果有错误信息，根据错误信息，重新生成SQL语句
                 5. 不要有\n \b等任何非法符号。
                 6. 如果要查询的是重点病种，应该查询所有重点病种包括的病种，然后按照病种和主刀医生排序。
+                7. 占比类的指标必须转换为百分数，要有%，不要有非法符号。
                 
         '''
         thinking_prompt = [self.system_message(sql_prompt), self.user_message(question)]
         return thinking_prompt
+
     def get_reflection_prompt(self, question: str, thinking: str, SQL: str):
 
         reflection_prompt = f'''
@@ -394,9 +400,7 @@ class Base(ABC):
         final_prompt = [self.system_message(final_prompt), self.user_message(result)]
         return final_prompt
 
-
-
-    def ask(self, question, save_csv:bool = False):
+    def ask(self, question, save_csv: bool = False):
         while self.times <= self.MAX_TIMES:
             question, semantic_result = self.confirm_quesiton(question)
             thinking = self.get_thinking_prompt(question, semantic_result)
@@ -421,7 +425,7 @@ class Base(ABC):
                 sql = self.submit_prompt(sql_prompt)
                 print("initial_sql:", sql)
 
-                y_or_n, run_sql_result,  = self.run_sql(sql)
+                y_or_n, run_sql_result, = self.run_sql(sql)
                 if not y_or_n:
                     error = run_sql_result
                     self.log(self.logger, "SQL:" + sql)
@@ -457,12 +461,16 @@ class Base(ABC):
             self.auto_add_examples(question, sql, auto=self.AUTO_ADD_EXAMPLES)
             # return result
             return sql_result
-    def auto_add_examples(self, question, sql, auto = False):
+
+    def auto_add_examples(self, question, sql, auto=False, front=True):
         if auto:
             self.add_example(question, sql)
             return "Auto Added"
-        add_or_no = input("是否添加到样例中？, 添加请输入 y，不添加请输入 n\n请输入您的选择：")
-        print("您的选择是:", add_or_no)
+        if front:
+            add_or_no = "y"
+        else:
+            add_or_no = input("是否添加到样例中？, 添加请输入 y，不添加请输入 n\n请输入您的选择：")
+            print("您的选择是:", add_or_no)
         if add_or_no == "y":
             self.add_example(question, sql)
         elif add_or_no == "n":
@@ -470,7 +478,7 @@ class Base(ABC):
         else:
             print("无效的输入，请输入 'y' 或 'n'。")
 
-    def add_example(self, question, sql, example_json = None):
+    def add_example(self, question, sql, example_json=None):
         if not example_json:
             example_json = os.path.join(self.prefix_dir, self.example_json)
         new_example = {
@@ -498,6 +506,7 @@ class Base(ABC):
     @abstractmethod
     def submit_confirm_prompt(self, final_prompt: List):
         pass
+
     @abstractmethod
     def submit_semantic_prompt(self, semantic_prompt: List):
         pass

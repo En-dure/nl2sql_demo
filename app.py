@@ -11,7 +11,7 @@ vllm.connect_to_mysql(**mysql_config)
 def init_state():
     # Initialize session state variables
     if 'question' not in st.session_state:   #问题
-        st.session_state.question = ""
+        st.session_state.question = ''
     if 'reget_info' not in st.session_state:   #补充信息
         st.session_state.reget_info = ""
     if "semantic_prompt" not in st.session_state:
@@ -41,10 +41,12 @@ def init_state():
     if "sql_end" not in st.session_state:
         st.session_state.sql_end = False
     if "sql" not in st.session_state:
-        st.session_state.sql = None
+        st.session_state.sql = ''
+    if "add_example" not in st.session_state:
+        st.session_state.add_example = False
 
 def clear_st_state():
-    st.session_state.question = ""
+    # st.session_state.question = None
     st.session_state.reget_info = ""
     st.session_state.semantic_prompt = ''
     st.session_state.semantic_result = ''
@@ -54,14 +56,14 @@ def clear_st_state():
     st.session_state.confirm = False
     st.session_state.sql_erroe = False
     st.session_state.thinking_result = ''
-    st.session_state.sql = None
     st.session_state.times = 0
     st.session_state.thinking_end = False
     st.session_state.sql_attemp = 0
     st.session_state.sql_df = pd.DataFrame()
     st.session_state.sql_end = False
-    st.session_state.sql = None
+    # st.session_state.sql = None
 def process_input(question):
+    st.session_state.times += 1
     """Process the user input and update the session state accordingly."""
     st.session_state.messages.append({"role": "user", "content": question})
     with st.chat_message("user"):
@@ -70,6 +72,9 @@ def process_input(question):
         st.session_state.question = question
     elif st.session_state.question and (not st.session_state.reget_info):
         st.session_state.reget_info = question
+    elif st.session_state.question and st.session_state.reget_info:
+        st.session_state.question = question
+        st.session_state.reget_info = ''
     semantic_prompt = vllm.get_semantic_prompt(st.session_state.question, reget_info=st.session_state.reget_info)
     st.session_state.semantic_prompt = semantic_prompt
     with st.chat_message("assistant"):
@@ -85,8 +90,8 @@ def process_input(question):
             st.session_state.fault = False  # Reset fault flag if successful
         else:
             st.session_state.semantic_false_result = text_json["result"]
-            # with st.chat_message("assistant"):
-            #     st.session_state.messages.append({"role": "assistant", "content": text_json["result"]})
+            with st.chat_message("assistant"):
+                st.markdown(text_json["result"])
             st.session_state.fault = True  # Set fault flag to True if needs re-input
     except Exception as e:
         with st.chat_message("assistant"):
@@ -108,7 +113,7 @@ def thinking(question, semantic_result):
             st.session_state.thinking_end = True
             st.session_state.thinking_result = thinking_result
     except Exception as e:
-        st.write("thinking error")
+        st.write("重新思考")
 
 def sql(question, think_result, error):
     sql_prompt = vllm.get_sql_prompt(question, think_result, error)
@@ -128,7 +133,6 @@ def sql(question, think_result, error):
     return
 
 
-
 def main():
     st.title("NL2SQL DEMO")
     init_state()
@@ -137,20 +141,9 @@ def main():
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
-        # 处理输入的问题
         process_input(question)
-        st.session_state.times += 1
-        # 如果输入次数达到2次，清空状态
-        if st.session_state.times == 2:
-            st.session_state.messages = []
-            st.session_state.question = ''
-            st.session_state.reget_info = ''
-            st.session_state.times = 0
         # 如果没有语义分解错误
         if st.session_state.fault == False:
-            # confirm_prompt = vllm.get_confirm_prompt(st.session_state.semantic_result)
-            # stream = vllm.stream_prompt(confirm_prompt)
-            # confirm_result = st.write_stream(stream)
             # 执行思考过程直到完成
             while not st.session_state.thinking_end:
                 thinking(st.session_state.question, st.session_state.semantic_result)
@@ -161,10 +154,28 @@ def main():
                     st.session_state.sql_attemp += 1
                 else:
                     break
-            # with st.chat_message("assistant"):
-            #     st.markdown(st.session_state.sql)
+            if st.session_state.sql_attemp == 3:
+                st.markdown(f"SQL语句为{st.session_state.sql}")
+                st.markdown("SQL执行错误，请刷新页面，重新提问")
             # 显示 SQL 查询结果
             st.dataframe(st.session_state.sql_df)
             clear_st_state()
 
+            # 检查按钮是否点击
+    if st.button("保存SQL语句"):
+        # 直接保存当前的输入和生成的 SQL 语句
+        if st.session_state.question and  st.session_state.sql:
+            vllm.auto_add_examples(st.session_state.question, st.session_state.sql)
+            st.markdown(f"**保存的问题**：{st.session_state.question}")
+            st.markdown(f"**保存的SQL语句**：\n\n```{st.session_state.sql}\n```")
+            st.success("保存成功！", icon="✅")
+            st.session_state.question = ''
+            st.session_state.sql = ''
+            # 提示用户保存成功
+        else:
+            st.warning('未保存成功', icon="⚠️")
+    elif st.button("重置"):
+        clear_st_state()
+        st.session_state.question = ''
+        st.session_state.sql = ''
 main()
