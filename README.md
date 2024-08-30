@@ -9,12 +9,16 @@
 1. 完成RAG中的examples添加
 2. 完成RAG的所有测试案例
 
-## 20240829
-streamlit v1
-
 ## 20240830
-1. 去掉confirm的过程
-2. 第一次提问，如果缺少元素，会在第二次追加，
-    如果添加后仍缺少，则重新提问，以免提问信息过多，造成混淆
-3. 增加保存到example_json的功能，按照问答对（SQL）保存，
+stramlit v5
+功能
+1. 添加add_example功能
+2. 第一次提问为question， 第二次提问为reget_info，
+    因此，如果第一个得到了正确回答，
+    应该点击重置或刷新页面
+    否则再次提问会将 上次的question合并，造成提问不准确
+3. 已基本实现所有测试案例的测试工作
 
+
+##  TODO
+1. 对semantic_result 进行处理，其偶尔不会然后str格式，造成submit_thinking报错
