@@ -67,7 +67,7 @@ def clear_st_state():
     # st.session_state.sql = None
 def process_input(question):
     st.session_state.times += 1
-    """Process the user input and update the session state accordingly."""
+    # """Process the user input and update the session state accordingly."""
     st.session_state.messages.append({"role": "user", "content": question})
     with st.chat_message("user"):
         st.markdown(question)
@@ -143,19 +143,20 @@ def main():
     st.title("NL2SQL DEMO")
     init_state()
     if question := st.chat_input("请输入"):
-        # 显示历史消息
+        # show history messages
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
         process_input(question)
-        while not st.session_state.semantic_result_pass:
+        while not st.session_state.semantic_result_pass and not st.session_state.fault:
+            # need improve
             st.markdown("语义分析失败，重新运行")
             st.session_state.question = ''
             st.session_state.reget_info = ''
             process_input(question)
         # 如果没有语义分解错误
         if st.session_state.fault == False:
-            # 执行思考过程直到完成
+            # thinking until end
             while not st.session_state.thinking_end:
                 thinking(st.session_state.question, st.session_state.semantic_result)
             while st.session_state.sql_attemp <= 3:
@@ -167,7 +168,7 @@ def main():
             if st.session_state.sql_attemp == 3:
                 st.markdown(f"SQL语句为{st.session_state.sql}")
                 st.markdown("SQL执行错误，请刷新页面，重新提问")
-            # 显示 SQL 查询结果
+            # show sql result
             st.dataframe(st.session_state.sql_df)
             clear_st_state()
 

@@ -10,7 +10,7 @@
 2. 完成RAG的所有测试案例
 
 ## 20240830
-stramlit v6
+streamlit v6
 功能
 1. 添加add_example功能
 2. 第一次提问为question， 第二次提问为reget_info，
@@ -20,5 +20,7 @@ stramlit v6
 3. 已基本实现所有测试案例的测试工作
 4. semantic_result类型检查，不为str，则自动重新提交question查询
 
-
+## 20240902
+streamlit v9
+完善semantic中result出现{}不是字符串，即没用""包裹{}的情况
 ##  TODO
